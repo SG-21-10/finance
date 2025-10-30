@@ -2,7 +2,8 @@ import { z } from 'zod';
 import { and, eq, inArray } from 'drizzle-orm';
 import { Hono } from 'hono';
 import { createId } from '@paralleldrive/cuid2';
-import { clerkMiddleware, getAuth } from '@hono/clerk-auth';
+// REMOVED clerkMiddleware import from here
+import { getAuth } from '@hono/clerk-auth';
 import { zValidator } from '@hono/zod-validator';
 
 import { db } from '@/db/drizzle';
@@ -10,11 +11,14 @@ import { accounts, insertAccountSchema } from '@/db/schema';
 
 // chain the handlers so that the types are always inferred
 const app = new Hono()
-  .get('/', clerkMiddleware(), async (c) => {
+  // REMOVED clerkMiddleware() from the route definition
+  .get('/', async (c) => {
     // Get authenticated user
     const auth = getAuth(c);
 
+    // This check remains important!
     if (!auth?.userId) {
+      // Use standard Hono way to return unauthorized
       return c.json({ error: 'Unauthorized' }, 401);
     }
 
@@ -37,7 +41,7 @@ const app = new Hono()
         id: z.string().optional(),
       })
     ),
-    clerkMiddleware(),
+    // REMOVED clerkMiddleware()
     async (c) => {
       const auth = getAuth(c);
       const { id } = c.req.valid('param');
@@ -68,7 +72,7 @@ const app = new Hono()
   )
   .post(
     '/',
-    clerkMiddleware(),
+    // REMOVED clerkMiddleware()
     // validate using zod what kind of json this POST request accepts by adding a validator zValidator
     zValidator(
       'json',
@@ -101,7 +105,7 @@ const app = new Hono()
   // Bulk delete account API
   .post(
     '/bulk-delete',
-    clerkMiddleware(),
+    // REMOVED clerkMiddleware()
     zValidator(
       'json',
       z.object({
@@ -131,7 +135,7 @@ const app = new Hono()
   )
   .patch(
     '/:id',
-    clerkMiddleware(),
+    // REMOVED clerkMiddleware()
     // Chaining two validators - first the id to patch & second one the json obj
     zValidator(
       'param',
@@ -173,7 +177,7 @@ const app = new Hono()
   )
   .delete(
     '/:id',
-    clerkMiddleware(),
+    // REMOVED clerkMiddleware()
     zValidator(
       'param',
       z.object({

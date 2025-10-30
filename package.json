@@ -42,6 +42,7 @@
     "next": "latest",
     "next-themes": "^0.3.0",
     "plaid": "^26.0.0",
+    "postgres": "^3.4.7",
     "query-string": "^9.0.0",
     "react": "^18",
     "react-countup": "^6.5.3",

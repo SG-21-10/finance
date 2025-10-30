@@ -71,7 +71,14 @@ export const connectedBanks = pgTable('connected_banks', {
   id: text('id').primaryKey(),
   userId: text('user_id').notNull(),
   accessToken: text('access_token').notNull(),
+  itemId: text('item_id').notNull(), // Make sure this line was added as discussed
 });
+
+// Optional but recommended relations definition
+export const connectedBanksRelations = relations(connectedBanks, () => ({
+  // Define relationships here if needed in the future
+}));
+
 
 export const subscriptions = pgTable('subscriptions', {
   id: text('id').primaryKey(),
